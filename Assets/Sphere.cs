@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// readme
+// Before build this application.
+// You must add line "implementation 'com.google.android.gms:play-services-safetynet:16.0.0'" to build.gradle file.
+
 public class Sphere : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -23,6 +27,8 @@ public class Sphere : MonoBehaviour
                 //ShowDialog();
                 bool result = IsGooglePlayServicesAvailable();
                 Debug.Log(result);
+                Debug.Log("start attest");
+                SendSafetyNetRequest();
             }
         }
     }
@@ -42,6 +48,15 @@ public class Sphere : MonoBehaviour
                 "this is test dialog"
             );
         }));
+#endif
+    }
+
+    void SendSafetyNetRequest() {
+#if UNITY_ANDROID
+        AndroidJavaClass safetyNetAPIUtil = new AndroidJavaClass("com.kaihatsubu.android.safetynetapimodule.SafetyNetAPIUtil");
+        AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject context = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        safetyNetAPIUtil.CallStatic("sendSafetyNetRequest", context);
 #endif
     }
 
